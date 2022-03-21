@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Jack</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <main>
+            <button :disabled="split!=0||!isSplit||playerCards.length<2||gameover" @click="onSplit">スプリット</button>
+            <button :disabled="playerCards.length<2||gameover||state==1" @click="onHit">ヒット</button>
+            <button :disabled="playerCards.length<2||double||money<bet||gameover" @click="doubleDown">ダブルダウン</button>
+            <button :disabled="playerCards.length<2||gameover||state==1" @click="stand">スタンド</button>
+            <button :disabled="gameover" v-show="state==1" @click="newGame">次のゲーム</button>
+
+            <p>ベット額：{{bet}}</p>
+
+
+            <p>ディーラーのカード<span v-if="state==1">：{{count(dealerCards)}}</span></p>
+            <div class="card-area">
+
+                <div class="card" :style="{color:cardColor(card.suit)}" v-for="(card,index) in dealerCards"
+                    :class="{blind:index==1&&state==0}">
+                    <div>{{card.disSuit}}</div>
+                    <div>{{card.disNumber}}</div>
+                </div>
+            </div><!-- /.card-area -->
+
+
+            <p>プレイヤーのカード：{{count(playerCards)}}</p>
+            <div class="card-area">
+                <div class="card" :style="{color:cardColor(card.suit)}" v-for="(card,index) in playerCards">
+                    <div>{{card.disSuit}}</div>
+                    <div>{{card.disNumber}}</div>
+                </div>
+                <p>{{splitJudge(playerCards)}}</p>
+            </div><!-- /.card-area -->
+
+
+            <p>スプリット：{{count(splitCards)}}</p>
+            <div class="card-area">
+                <div class="card" :style="{color:cardColor(card.suit)}" v-for="(card,index) in splitCards">
+                    <div>{{card.disSuit}}</div>
+                    <div>{{card.disNumber}}</div>
+                </div>
+                <p>{{splitJudge(splitCards)}}</p>
+            </div><!-- /.card-area -->
+            
+
+            <p v-show="state==1" class="judge">{{judge}}</p>
+
+        </main>
+        <aside>
+            <div>
+                所持金：{{money}}
+            </div>
+            <div>
+                履歴：
+                <p v-for="(history,index) in histories" :key="index">{{history}}</p>
+            </div>
+        </aside>
+
+    </div><!-- /#app -->
+
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
